@@ -26,3 +26,9 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.Book-tile {
+  background-color: #12BFECB6;
+  height: 225px;
+  width: 150px;
+}

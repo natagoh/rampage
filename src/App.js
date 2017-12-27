@@ -11,11 +11,13 @@ class Bookshelf extends Component {
   }
 }
 
-// book to be displayed on our virtual bookshelf
-// book has:
-// title, author, rating, description, review
-// description and review only appear upon clicking on the book tile
-// uniform size: ratio = 1.6:1 height:width
+{/* 
+  * Class: Book
+  * Props: title, author, rating, description, review, cover img
+  * description and review only appear upon clicking on the book tile
+  * uniform size: ratio = 1.5:1 height:width
+  *
+  */}  
 class Book extends Component {
   constructor(props) {
     super(props);
@@ -23,8 +25,8 @@ class Book extends Component {
 
   render() {
     return (
-      <div>
-        <h1> { this.props.title } </h1>
+      <div class="Book-tile">
+        <p> { this.props.title } </p>
         <p>testing</p>
       </div>
     )
