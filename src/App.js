@@ -58,9 +58,11 @@ class SmartNav extends Component {
     window.removeEventListener('resize', this.updateNavDimensions);
   }
 
+
   updateNavDimensions() {
     const height = document.getElementById('smart-nav').clientHeight;
     this.setState({ nav_height: height });
+    this.props.sendNavHeight(height);
   }
 
   render() {
@@ -104,8 +106,9 @@ class SmartNav extends Component {
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { window_width: '0', window_height: '0' };
+    this.state = { window_width: '0', window_height: '0', nav_height: '0' };
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+    this.getNavHeight = this.getNavHeight.bind(this);
   }
 
   componentDidMount() {
@@ -121,6 +124,9 @@ class App extends Component {
     this.setState({ window_width: window.innerWidth, window_height: window.innerHeight });
   }
 
+  getNavHeight(height) {
+    this.setState({nav_height: height});
+  }
 
   render() {
   
@@ -139,7 +145,7 @@ const buttonsInstance = (
       <div>
        
 
-        <SmartNav />
+        <SmartNav sendNavHeight={this.getNavHeight}/>
         <Book title="The Name of the Wind" />
         <Bookshelf />
         {buttonsInstance}
