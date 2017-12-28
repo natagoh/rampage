@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 
+var Alert = require('react-bootstrap/lib/Alert');
+
 // virtual bookshelf
 class Bookshelf extends Component {
   render() {
