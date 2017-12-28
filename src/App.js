@@ -139,16 +139,18 @@ const buttonsInstance = (
     <Button bsSize="large" block>Block level button</Button>
   </div>
 );
-
-
+    var navMargin = this.state.nav_height + 'px'
+    
     return (
       <div>
-       
-
         <SmartNav sendNavHeight={this.getNavHeight}/>
-        <Book title="The Name of the Wind" />
-        <Bookshelf />
-        {buttonsInstance}
+
+        {/* div containing everything except for navbar */}
+        <div style={{marginTop: navMargin}}>
+          <Book title="The Name of the Wind" />
+          <Bookshelf />
+          {buttonsInstance}
+        </div>
       </div>
     );
   }
