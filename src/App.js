@@ -16,7 +16,7 @@ class Bookshelf extends Component {
       shelf_width: 0,
       shelf_space: 10, // space between books
       book_width: 150,
-      shelf_size: 1, // shelf_size = num books that can fit on a shelf
+      shelf_size: 0, // shelf_size = num books that can fit on a shelf
       shelf_arrays: [] // shelf arrays, array of books to be displayed on a shelf
     };
 
@@ -24,11 +24,27 @@ class Bookshelf extends Component {
     this.books2Shelves = this.books2Shelves.bind(this);
   }
 
+  componentDidMount() {
+    console.log("component just mount width: ", this.state.shelf_width);
+    var space = this.state.shelf_space;
+    var bookWidth = this.state.book_width;
+
+    var temp = space;
+    var numBooks = 0;
+    while (temp + bookWidth + space <= this.props.width) {
+      temp += bookWidth + space;
+      numBooks++;
+    }
+    console.log('numbooks: ', numBooks)
+    this.setState({ shelf_size: numBooks}, this.books2Shelves);
+    console.log("space calulated ", this.state.shelf_size)
+  }
 
   // update the shelf width when window size changes or whatever
   componentWillReceiveProps(nextProps) {
     this.setState({ shelf_width: nextProps.width });
     this.calculateShelf();
+    this.books2Shelves();
   }
 
   // determining how many books can fit in a shelf
@@ -43,20 +59,18 @@ class Bookshelf extends Component {
       numBooks++;
     }
     this.setState({ shelf_size: numBooks});
-    this.books2Shelves();
+    
   }
 
   // split books into shelves
   books2Shelves() {
-    var numBooks = this.state.shelf_size; // num books per shelf
     var shelves = [];
-    for (var j = 0; j < json.length; j += numBooks) {
-      var splitBooks = json.slice(j, j+numBooks);
-      console.log("slice tets: ", j ," ", splitBooks);
-      shelves.push(splitBooks);
-    }
+    //for (var j = 0; j < json.length; j += this.state.shelf_size) {
+      //shelves.push(json.slice(j, j+this.state.shelf_size));
+    //}
+    shelves.push(json.slice(0, 0+this.state.shelf_size))
+    shelves.push(json.slice(this.state.shelf_size, this.state.shelf_size+this.state.shelf_size))
     this.setState({ shelf_arrays: shelves});
-    console.log("shelf arrs: ", this.state.shelf_arrays);
   }
 
   // determine how many shelevs we need and how many books on each shelf
@@ -67,7 +81,7 @@ class Bookshelf extends Component {
     var shelves = []
     for (var j = 0; j < shelfArrs.length; j++)
     {
-        shelves.push(<Shelf bookData={shelfArrs[j]} />);
+        shelves.push(<Shelf key={j} bookData={shelfArrs[j]} />);
     }
 
     //console.log('window dimensions', window.innerWidth)
