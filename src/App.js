@@ -4,10 +4,6 @@ import './App.css';
 // loading json book data
 import json from './metadata.json'
 
-//import {Bootstrap, Grid, Row, Col} from 'react-bootstrap';
-//import { Navbar, NavItem, NavDropdown, MenuItem, Nav, FormGroup, FormControl, Button } from 'react-bootstrap';
-//var Alert = require('react-bootstrap/lib/Alert');
-
 // virtual bookshelf
 class Bookshelf extends Component {
   constructor(props) {
@@ -65,9 +61,6 @@ class Bookshelf extends Component {
   // split books into shelves
   books2Shelves() {
     var shelves = [];
-    //for (var j = 0; j < json.length; j += this.state.shelf_size) {
-      //shelves.push(json.slice(j, j+this.state.shelf_size));
-    //}
     var numBooks = this.state.shelf_size;
     var temp = [];
     for (var j = 0; j < json.length; j++) {
@@ -81,16 +74,14 @@ class Bookshelf extends Component {
 
   // determine how many shelevs we need and how many books on each shelf
   render() {
-    //console.log("numbooks: ", numBooks)
     // make shelves
     var shelfArrs = this.state.shelf_arrays;
     var shelves = []
     for (var j = 0; j < shelfArrs.length; j++)
     {
-        shelves.push(<Shelf key={j} bookData={shelfArrs[j]} />);
+        shelves.push(<Shelf key={j} pos={j} bookData={shelfArrs[j]} bookWidth={this.state.book_width} space={this.state.shelf_space}/>);
     }
 
-    //console.log('window dimensions', window.innerWidth)
     return (
       <div id='bookshelf'>
         {shelves}
@@ -119,14 +110,11 @@ class Shelf extends Component {
 
     // put books on the same line
     var books = bookArray.map((book, index) => (
-      <div key={index}>
-        <p> Hello, {book.title} from {book.author}! index = {index}</p>
-        <img src={book.img} alt="cover img"></img>
-      </div>
+      <Book key={index} pos={index} book={book} space={this.props.space} bookWidth={this.props.bookWidth} />
     ))
 
     return (
-      <div className='shelf'>
+      <div className='shelf' style={{top: (1.5*this.props.bookWidth + this.props.space)*(this.props.pos)}}>
         {books}
       </div>
     )
@@ -147,9 +135,8 @@ class Book extends Component {
 
   render() {
     return (
-      <div className="Book-tile">
-        <p> { this.props.title } </p>
-        <p>testing</p>
+      <div className="book" style={{left: (this.props.space + this.props.bookWidth)*(this.props.pos + 1)}}>
+        <img src={this.props.book.img} alt="cover img"></img>
       </div>
     )
   }
@@ -260,7 +247,7 @@ class App extends Component {
         <SmartNav sendNavHeight={this.getNavHeight}/>
 
         {/* div containing everything except for navbar */}
-        <div style={{marginTop: navMargin}}>
+        <div id="content" style={{marginTop: navMargin}}>
           <Bookshelf width={this.state.window_width}/>
         </div>
       </div>

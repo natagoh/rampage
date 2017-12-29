@@ -4,6 +4,18 @@
   width: 150px;
 }
 
+.shelf {
+  position: absolute;
+}
+
+.book {
+  position: absolute;
+}
+
+#content {
+  position: relative;
+}
+
 img {
 
   width: 150px;
