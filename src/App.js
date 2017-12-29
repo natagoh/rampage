@@ -97,14 +97,16 @@ class Shelf extends Component {
       left: '5px'
     }
 
+    var books = bookArray.map((book, index) => (
+      <div key={index}>
+        <p> Hello, {book.title} from {book.author}! index = {index}</p>
+        <img src={book.img} alt="cover img"></img>
+      </div>
+    ))
+
     return (
       <div className='shelf'>
-        {bookArray.map((book, index) => (
-          <div key={index}>
-            <p> Hello, {book.title} from {book.author}!</p>
-            <img src={book.img} alt="cover img"></img>
-          </div>
-        ))}
+        {books}
       </div>
     )
   }
