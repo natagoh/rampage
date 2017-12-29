@@ -68,8 +68,14 @@ class Bookshelf extends Component {
     //for (var j = 0; j < json.length; j += this.state.shelf_size) {
       //shelves.push(json.slice(j, j+this.state.shelf_size));
     //}
-    shelves.push(json.slice(0, 0+this.state.shelf_size))
-    shelves.push(json.slice(this.state.shelf_size, this.state.shelf_size+this.state.shelf_size))
+    var numBooks = this.state.shelf_size;
+    var temp = [];
+    for (var j = 0; j < json.length; j++) {
+      if (j % numBooks == 0) {
+        shelves.push(json.slice(j, j+this.state.shelf_size));
+      } 
+    }
+    
     this.setState({ shelf_arrays: shelves});
   }
 
@@ -111,6 +117,7 @@ class Shelf extends Component {
       left: '5px'
     }
 
+    // put books on the same line
     var books = bookArray.map((book, index) => (
       <div key={index}>
         <p> Hello, {book.title} from {book.author}! index = {index}</p>
