@@ -208,7 +208,7 @@ class Book extends Component {
 
   render() {
     var bookStyle = {
-      left: (this.props.space + this.props.bookWidth)*(this.props.pos + 1),
+      left: (this.props.space + this.props.bookWidth)*this.props.pos,
       bottom: 0
     }
     return (
