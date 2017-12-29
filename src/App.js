@@ -79,9 +79,10 @@ class Bookshelf extends Component {
     // make shelves
     var shelfArrs = this.state.shelf_arrays;
     var shelves = []
+    var id = 'shelf-';
     for (var j = 0; j < shelfArrs.length; j++)
     {
-        shelves.push(<Shelf key={j} shelfPos={j} bookData={shelfArrs[j]} bookWidth={this.state.book_width} space={this.state.shelf_space}/>);
+        shelves.push(<Shelf key={j} id={id+j} shelfPos={j} shelfWidth={this.state.shelf_width} shelfSize={this.state.shelf_size} bookData={shelfArrs[j]} bookWidth={this.state.book_width} space={this.state.shelf_space}/>);
     }
 
     return (
@@ -98,16 +99,46 @@ class Shelf extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      heights: [] // array of book heights on the shelf
+      heights: [], // array of book heights on the shelf
+      shelf_height: 0, // height of the shelf
+      shelf_width: 0, // how wide the shelf is
+      size: 0
     };
 
     this.findTallestBook = this.findTallestBook.bind(this);
     this.addHeight = this.addHeight.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
+    this.setState({ 
+      size: this.props.shelfSize,
+      heights: [], // reset height
+      shelf_width: this.props.shelfWidth
+    })
     this.findTallestBook();
-    this.setState({ heights: [] }); // reset height
+  }
+
+  // update shel size state
+  componentWillReceiveProps(nextProps) {
+    this.setState({ 
+      size: nextProps.shelfSize,
+      shelf_width: nextProps.shelfWidth
+    });
+
+    // resize heights array
+    var temp = this.state.heights;
+    this.setState({ size: this.props.bookData.length })
+    if (temp.length > this.props.bookData.length) {
+      temp = temp.slice(0, this.props.bookData.length);
+    }
+    this.setState({ heights: temp });
+    this.findTallestBook();
+  }
+
+  // get height of shelf
+  componentDidMount() {
+    const height = document.getElementById(this.props.id).clientHeight;
+    this.setState({ test: height})
   }
 
   componentWillUnmount() {
@@ -116,6 +147,7 @@ class Shelf extends Component {
 
   addHeight(height, pos) {
     var temp = this.state.heights;
+    this.setState({ size: this.props.bookData.length })
     if (temp.length > this.props.bookData.length) {
       temp = temp.slice(0, this.props.bookData.length);
     }
@@ -126,24 +158,23 @@ class Shelf extends Component {
 
   // todo: find tallest image and set shelf to that height
   findTallestBook() {
-    var bookArr = this.props.bookData;
-    var heights = [];
-    for (var j = 0; j < bookArr.length; j++) {
-      heights.push(bookArr[j].img.naturalHeight);
-    }
-    heights.sort((a, b) => (-1*(a-b)));
-    console.log("arry: ", heights);
+    var heights = this.state.heights;
+    heights.sort((a, b) => (a - b)*-1);
+    this.setState({ shelf_height: heights[0] });
   }
+
 
   render() {
     // fit as many books on the shelf as possible
     var bookArray = this.props.bookData;  
-   
+
     // styling to fit the books  
-    var shelf_style = {
-      position: 'absolute',
-      bottom: '10px',
-      left: '5px'
+    // top: (this.state.shelf_height + this.props.space)*(this.props.shelfPos)
+    var shelfStyle = {
+      //top: this.state.shelf_height*this.props.shelfPos,
+      height: this.state.shelf_height,
+      width: this.state.shelf_width,
+      overflow: 'hidden'
     }
 
     // put books on the same line
@@ -152,7 +183,7 @@ class Shelf extends Component {
     ))
 
     return (
-      <div className='shelf' style={{top: (1.5*this.props.bookWidth + this.props.space)*(this.props.shelfPos)}}>
+      <div className='shelf' id={this.props.id} style={shelfStyle}>
         {books}
       </div>
     )
@@ -176,8 +207,12 @@ class Book extends Component {
   }
 
   render() {
+    var bookStyle = {
+      left: (this.props.space + this.props.bookWidth)*(this.props.pos + 1),
+      bottom: 0
+    }
     return (
-      <div className="book" style={{left: (this.props.space + this.props.bookWidth)*(this.props.pos + 1)}}>
+      <div className="book" style={bookStyle}>
         <ReactHeight onHeightReady={val => this.setState({ height: val }, this.props.addHeight(val, this.props.pos))}>
           <img src={this.props.book.img} alt="cover img"></img>
         </ReactHeight>
