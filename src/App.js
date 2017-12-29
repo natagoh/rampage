@@ -1,20 +1,111 @@
 import React, { Component } from 'react';
 import './App.css';
-import {Bootstrap, Grid, Row, Col} from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.css';
-import { Navbar, NavItem, NavDropdown, MenuItem, Nav, FormGroup, FormControl, Button } from 'react-bootstrap';
-var Alert = require('react-bootstrap/lib/Alert');
+
+// loading json book data
+import json from './metadata.json'
+
+//import {Bootstrap, Grid, Row, Col} from 'react-bootstrap';
+//import { Navbar, NavItem, NavDropdown, MenuItem, Nav, FormGroup, FormControl, Button } from 'react-bootstrap';
+//var Alert = require('react-bootstrap/lib/Alert');
 
 // virtual bookshelf
 class Bookshelf extends Component {
   constructor(props) {
     super(props);
+    this.state = { 
+      shelf_width: 0,
+      shelf_space: 10, // space between books
+      book_width: 150,
+      shelf_size: 1, // shelf_size = num books that can fit on a shelf
+      shelf_arrays: [] // shelf arrays, array of books to be displayed on a shelf
+    };
+
+    this.calculateShelf = this.calculateShelf.bind(this);
+    this.books2Shelves = this.books2Shelves.bind(this);
+  }
+
+
+  // update the shelf width when window size changes or whatever
+  componentWillReceiveProps(nextProps) {
+    this.setState({ shelf_width: nextProps.width });
+    this.calculateShelf();
+  }
+
+  // determining how many books can fit in a shelf
+  calculateShelf() {
+    var space = this.state.shelf_space;
+    var bookWidth = this.state.book_width;
+
+    var temp = space;
+    var numBooks = 0;
+    while (temp + bookWidth + space <= this.props.width) {
+      temp += bookWidth + space;
+      numBooks++;
+    }
+    this.setState({ shelf_size: numBooks});
+    this.books2Shelves();
+  }
+
+  // split books into shelves
+  books2Shelves() {
+    var numBooks = this.state.shelf_size; // num books per shelf
+    var shelves = [];
+    for (var j = 0; j < json.length; j += numBooks) {
+      var splitBooks = json.slice(j, j+numBooks);
+      console.log("slice tets: ", j ," ", splitBooks);
+      shelves.push(splitBooks);
+    }
+    this.setState({ shelf_arrays: shelves});
+    console.log("shelf arrs: ", this.state.shelf_arrays);
+  }
+
+  // determine how many shelevs we need and how many books on each shelf
+  render() {
+    //console.log("numbooks: ", numBooks)
+    // make shelves
+    var shelfArrs = this.state.shelf_arrays;
+    var shelves = []
+    for (var j = 0; j < shelfArrs.length; j++)
+    {
+        shelves.push(<Shelf bookData={shelfArrs[j]} />);
+    }
+
+    //console.log('window dimensions', window.innerWidth)
+    return (
+      <div id='bookshelf'>
+        {shelves}
+      </div>    
+    )
+  }
+}
+
+// a bookshelf consists of shelves
+// which consists of books
+class Shelf extends Component {
+  constructor(props) {
+    super(props);
   }
 
   render() {
-    //console.log('window dimensions', window.innerWidth)
+    // fit as many books on the shelf as possible
+    var bookArray = this.props.bookData;  
+   
+    // styling to fit the books  
+    var shelf_style = {
+      position: 'absolute',
+      bottom: '10px',
+      left: '5px'
+    }
+
     return (
-      <p>hi this is a bookshelf</p>
+      <div className='shelf'>
+        {bookArray.map((book, index) => (
+          <div key={index}>
+            <p> Hello, {book.title} from {book.author}!</p>
+            <img src={book.img} alt="cover img"></img>
+          </div>
+        ))}
+      </div>
     )
   }
 }
@@ -58,13 +149,13 @@ class SmartNav extends Component {
     window.removeEventListener('resize', this.updateNavDimensions);
   }
 
-
   updateNavDimensions() {
     const height = document.getElementById('smart-nav').clientHeight;
     this.setState({ nav_height: height });
     this.props.sendNavHeight(height);
   }
 
+  // renders the navbar
   render() {
     return (
       <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top" id="smart-nav">
@@ -103,6 +194,7 @@ class SmartNav extends Component {
   }
 }
 
+// the main app
 class App extends Component {
   constructor(props) {
     super(props);
@@ -129,27 +221,24 @@ class App extends Component {
   }
 
   render() {
-  
+    //const wellStyles = { maxWidth: 400, margin: '0 auto 10px' };
 
-    const wellStyles = { maxWidth: 400, margin: '0 auto 10px' };
-
-const buttonsInstance = (
-  <div className="well" style={wellStyles}>
-    <Button bsStyle="primary" bsSize="large" block>Block level button</Button>
-    <Button bsSize="large" block>Block level button</Button>
-  </div>
-);
+    /*const buttonsInstance = (
+      <div className="well" style={wellStyles}>
+        <Button bsStyle="primary" bsSize="large" block>Block level button</Button>
+        <Button bsSize="large" block>Block level button</Button>
+      </div>
+    );
+    */
     var navMargin = this.state.nav_height + 'px'
-    
+
     return (
       <div>
         <SmartNav sendNavHeight={this.getNavHeight}/>
 
         {/* div containing everything except for navbar */}
         <div style={{marginTop: navMargin}}>
-          <Book title="The Name of the Wind" />
-          <Bookshelf />
-          {buttonsInstance}
+          <Bookshelf width={this.state.window_width}/>
         </div>
       </div>
     );
