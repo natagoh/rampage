@@ -95,6 +95,23 @@ class Bookshelf extends Component {
 class Shelf extends Component {
   constructor(props) {
     super(props);
+
+    this.findTallestBook = this.findTallestBook.bind(this);
+  }
+
+  componentDidMount() {
+    this.findTallestBook();
+  }
+
+  // todo: find tallets image and set shelf to that height
+  findTallestBook() {
+    var bookArr = this.props.bookData;
+    var heights = []
+    for (var j = 0; j < bookArr.length; j++) {
+      heights.push(bookArr[j].img.naturalHeight)
+    }
+    heights.sort((a, b) => (-1*(a-b)));
+    console.log("arry: ", heights);
   }
 
   render() {
@@ -208,7 +225,12 @@ class SmartNav extends Component {
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { window_width: '0', window_height: '0', nav_height: '0' };
+    this.state = { 
+      window_width: '0', 
+      window_height: '0', 
+      nav_height: '0',
+      content_width: '0' 
+    };
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.getNavHeight = this.getNavHeight.bind(this);
   }
@@ -224,6 +246,8 @@ class App extends Component {
 
   updateWindowDimensions() {
     this.setState({ window_width: window.innerWidth, window_height: window.innerHeight });
+    const width = document.getElementById('content').clientWidth;
+    this.setState({ content_width: width})
   }
 
   getNavHeight(height) {

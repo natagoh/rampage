@@ -12,15 +12,15 @@
 		"review": "FAV BOOK"
 	},
 	{
-		"title" : "The Name of The Wind",
+		"title" : "Saint's Blood",
 		"author": "Patrick Rothfuss",
-		"img": "/covers/nameofthewind.jpg",
+		"img": "/covers/saintsblood.jpg",
 		"review": "FAV BOOK"
 	},
 	{
-		"title" : "The Lies of Locke Lamora",
+		"title" : "Ready Player One",
 		"author": "Scott Lynch",
-		"img": "/covers/lies.jpg",
+		"img": "/covers/rpo.jpg",
 		"review": "FAV BOOK"
 	},
 	{
