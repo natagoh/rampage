@@ -102,7 +102,7 @@ class Shelf extends Component {
       heights: [], // array of book heights on the shelf
       shelf_height: 0, // height of the shelf
       shelf_width: 0, // how wide the shelf is
-      size: 0
+      size: 0 // number of books that can fit on the shelf
     };
 
     this.findTallestBook = this.findTallestBook.bind(this);
@@ -179,7 +179,7 @@ class Shelf extends Component {
 
     // put books on the same line
     var books = bookArray.map((book, index) => (
-      <Book key={index} shelfPos={this.props.shelfPos} pos={index} addHeight={this.addHeight} book={book} space={this.props.space} bookWidth={this.props.bookWidth} />
+      <Book key={index} shelfPos={this.props.shelfPos} shelfSize={this.state.size} shelfWidth={this.state.shelf_width} pos={index} addHeight={this.addHeight} book={book} space={this.props.space} bookWidth={this.props.bookWidth} />
     ))
 
     return (
@@ -202,13 +202,25 @@ class Book extends Component {
     super(props);
 
     this.state = { 
-      height: 0 // height of book in px
+      height: 0, // height of book in px
+      shelf_width: 0, // the width of the shelf, used for calculating offset
+      shelf_size: 0 // the nubmer of books that can fit on the shelf
     };
   }
 
+  // update shelf height
+  componentWillReceiveProps(newProps) {
+    this.setState({ 
+      shelf_width: newProps.shelfWidth,
+      shelf_size: newProps.shelfSize 
+    });
+  }
+
   render() {
+    var totalBookLength = (this.props.space + this.props.bookWidth)*this.state.shelf_size;
+    var offset = (this.state.shelf_width - totalBookLength) / 2;
     var bookStyle = {
-      left: (this.props.space + this.props.bookWidth)*this.props.pos,
+      left: (this.props.space + this.props.bookWidth)*this.props.pos + offset,
       bottom: 0
     }
     return (
