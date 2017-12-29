@@ -4,9 +4,11 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.0.0-beta.2",
+    "popper.js": "^1.12.9",
     "react": "^16.2.0",
     "react-bootstrap": "^0.31.5",
     "react-dom": "^16.2.0",
+    "react-height": "^3.0.0",
     "react-scripts": "1.0.17"
   },
   "scripts": {
@@ -14,5 +16,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "popper": "^1.0.1"
   }
 }

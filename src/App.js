@@ -3,6 +3,8 @@ import './App.css';
 
 // loading json book data
 import json from './metadata.json'
+import {ReactHeight} from 'react-height';
+ 
 
 // virtual bookshelf
 class Bookshelf extends Component {
@@ -64,7 +66,7 @@ class Bookshelf extends Component {
     var numBooks = this.state.shelf_size;
     var temp = [];
     for (var j = 0; j < json.length; j++) {
-      if (j % numBooks == 0) {
+      if (j % numBooks === 0) {
         shelves.push(json.slice(j, j+this.state.shelf_size));
       } 
     }
@@ -79,7 +81,7 @@ class Bookshelf extends Component {
     var shelves = []
     for (var j = 0; j < shelfArrs.length; j++)
     {
-        shelves.push(<Shelf key={j} pos={j} bookData={shelfArrs[j]} bookWidth={this.state.book_width} space={this.state.shelf_space}/>);
+        shelves.push(<Shelf key={j} shelfPos={j} bookData={shelfArrs[j]} bookWidth={this.state.book_width} space={this.state.shelf_space}/>);
     }
 
     return (
@@ -95,20 +97,39 @@ class Bookshelf extends Component {
 class Shelf extends Component {
   constructor(props) {
     super(props);
+    this.state = { 
+      heights: [] // array of book heights on the shelf
+    };
 
     this.findTallestBook = this.findTallestBook.bind(this);
+    this.addHeight = this.addHeight.bind(this);
   }
 
   componentDidMount() {
     this.findTallestBook();
+    this.setState({ heights: [] }); // reset height
   }
 
-  // todo: find tallets image and set shelf to that height
+  componentWillUnmount() {
+    this.setState({ heights: [] }); // reset height
+  }
+
+  addHeight(height, pos) {
+    var temp = this.state.heights;
+    if (temp.length > this.props.bookData.length) {
+      temp = temp.slice(0, this.props.bookData.length);
+    }
+    temp[pos] = height;
+    //temp.push(height);
+    this.setState({ heights: temp });
+  }
+
+  // todo: find tallest image and set shelf to that height
   findTallestBook() {
     var bookArr = this.props.bookData;
-    var heights = []
+    var heights = [];
     for (var j = 0; j < bookArr.length; j++) {
-      heights.push(bookArr[j].img.naturalHeight)
+      heights.push(bookArr[j].img.naturalHeight);
     }
     heights.sort((a, b) => (-1*(a-b)));
     console.log("arry: ", heights);
@@ -127,11 +148,11 @@ class Shelf extends Component {
 
     // put books on the same line
     var books = bookArray.map((book, index) => (
-      <Book key={index} pos={index} book={book} space={this.props.space} bookWidth={this.props.bookWidth} />
+      <Book key={index} shelfPos={this.props.shelfPos} pos={index} addHeight={this.addHeight} book={book} space={this.props.space} bookWidth={this.props.bookWidth} />
     ))
 
     return (
-      <div className='shelf' style={{top: (1.5*this.props.bookWidth + this.props.space)*(this.props.pos)}}>
+      <div className='shelf' style={{top: (1.5*this.props.bookWidth + this.props.space)*(this.props.shelfPos)}}>
         {books}
       </div>
     )
@@ -148,12 +169,18 @@ class Shelf extends Component {
 class Book extends Component {
   constructor(props) {
     super(props);
+
+    this.state = { 
+      height: 0 // height of book in px
+    };
   }
 
   render() {
     return (
       <div className="book" style={{left: (this.props.space + this.props.bookWidth)*(this.props.pos + 1)}}>
-        <img src={this.props.book.img} alt="cover img"></img>
+        <ReactHeight onHeightReady={val => this.setState({ height: val }, this.props.addHeight(val, this.props.pos))}>
+          <img src={this.props.book.img} alt="cover img"></img>
+        </ReactHeight>
       </div>
     )
   }
