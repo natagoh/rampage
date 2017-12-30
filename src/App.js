@@ -69,20 +69,38 @@ class SmartNav extends Component {
 // the main app
 class App extends Component {
   constructor(props) {
+    let width = window.innerWidth; // jank: initialize to window width
     super(props);
     this.state = { 
       window_width: '0', 
       window_height: '0', 
       nav_height: '0',
-      content_width: '0' 
+      content_width: width
     };
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.getNavHeight = this.getNavHeight.bind(this);
   }
 
+  componentWillMount() {
+    this.setState({ 
+      window_width: window.innerWidth, 
+      window_height: window.innerHeight
+    });
+    console.log('app will mount', this.state.content_width)
+  }
+
   componentDidMount() {
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
+    console.log('app did mount', this.state.content_width)
+  }
+
+  componentDidUpdate() {
+    let width = document.getElementById('content').clientWidth;
+    if (this.state.content_width !== width) {
+      this.setState({ content_width: width });
+    }
+    console.log('app did update', this.state.content_width)
   }
 
   componentWillUnmount() {
@@ -90,9 +108,12 @@ class App extends Component {
   }
 
   updateWindowDimensions() {
-    this.setState({ window_width: window.innerWidth, window_height: window.innerHeight });
-    const width = document.getElementById('content').clientWidth;
-    this.setState({ content_width: width})
+    let width = document.getElementById('content').clientWidth;
+    this.setState({ 
+      window_width: window.innerWidth, 
+      window_height: window.innerHeight,
+      content_width: width 
+    });
   }
 
   getNavHeight(height) {
@@ -110,14 +131,14 @@ class App extends Component {
     );
     */
     var navMargin = this.state.nav_height + 'px'
-
+    console.log("window width: ", this.state.content_width)
     return (
       <div>
         <SmartNav sendNavHeight={this.getNavHeight}/>
 
         {/* div containing everything except for navbar */}
         <div id="content" style={{marginTop: navMargin}}>
-          <Bookshelf width={this.state.window_width}/>
+          <Bookshelf width={this.state.content_width}/>
         </div>
       </div>
     );

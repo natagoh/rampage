@@ -5,7 +5,20 @@ import './App.css';
 import json from './metadata.json'
 import {ReactHeight} from 'react-height';
  
-// virtual bookshelf
+/* ----------
+ * | Props: |
+ * ----------
+ * width: width of the window
+ *
+ * ----------
+ * | States |
+ * ----------
+ * book_width: // max width of a book
+ * shelf_arrays: // 
+ * shelf_size:
+ * shelf_space:
+ * shelf_width:
+ */
 class Bookshelf extends Component {
   constructor(props) {
     super(props);
@@ -21,6 +34,10 @@ class Bookshelf extends Component {
     this.books2Shelves = this.books2Shelves.bind(this);
   }
 
+  componentWillMount() {
+    this.setState({ shelf_width: this.props.width });
+  }
+
   componentDidMount() {
     console.log("component just mount width: ", this.state.shelf_width);
     var space = this.state.shelf_space;
@@ -32,9 +49,7 @@ class Bookshelf extends Component {
       temp += bookWidth + space;
       numBooks++;
     }
-    console.log('numbooks: ', numBooks)
     this.setState({ shelf_size: numBooks}, this.books2Shelves);
-    console.log("space calulated ", this.state.shelf_size)
   }
 
   // update the shelf width when window size changes or whatever
@@ -98,7 +113,8 @@ class Shelf extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      heights: [], // array of book heights on the shelf
+      // jank fix put default value until I figure out whats happening LOL
+      heights: [250], // array of book heights on the shelf
       shelf_height: 0, // height of the shelf
       shelf_width: 0, // how wide the shelf is
       size: 0 // number of books that can fit on the shelf
@@ -137,7 +153,24 @@ class Shelf extends Component {
   // get height of shelf
   componentDidMount() {
     const height = document.getElementById(this.props.id).clientHeight;
-    this.setState({ test: height})
+  }
+
+  componentDidUpdate() {
+    if (this.state.size !== this.props.shelfSize) {
+      this.setState({ size: this.props.shelfSize });
+
+      // resize heights array
+      let temp = this.state.heights;
+      // this.setState({ size: this.props.bookData.length })
+      if (temp.length > this.props.bookData.length) {
+        temp = temp.slice(0, this.props.bookData.length);
+      }
+
+      this.setState({ heights: temp }, this.findTallestBook);
+    }
+    if (this.state.shelf_width !== this.props.shelfWidth) {
+      this.setState({ shelf_width: this.props.shelfWidth });
+    }  
   }
 
   componentWillUnmount() {
@@ -160,9 +193,11 @@ class Shelf extends Component {
     var heights = this.state.heights;
     heights.sort((a, b) => (a - b)*-1);
     this.setState({ shelf_height: heights[0] });
+    console.log("shelf height: ", heights[0], " ", this.state.shelf_height)
   }
   
   render() {
+    console.log("heights: ", this.state.heights)
     // fit as many books on the shelf as possible
     var bookArray = this.props.bookData;  
 
@@ -174,6 +209,7 @@ class Shelf extends Component {
       width: this.state.shelf_width,
       overflow: 'hidden'
     }
+
 
     // put books on the same line
     var books = bookArray.map((book, index) => (
