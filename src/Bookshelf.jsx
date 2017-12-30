@@ -145,19 +145,12 @@ class Bookshelf extends Component {
       initialIndex: 2
     }
 
-    // carousel settings
-    var settings = {
-      dots: true,
-      infinite: true,
-      speed: 500,
-      slidesToShow: 1,
-      slidesToScroll: 1
-    };
-
+    var curr = this.state.shelf_index % this.state.shelf_size;
+    console.log("CURRENT INDEX: ", curr)
     // return
     return (
-      <div id='bookshelf'>
-        {shelfGroups[0]}
+      <div id='bookshelf' onWheel = {this.handleScroll}>
+        {shelfGroups[this.state.shelf_index % this.state.shelf_size]}
       </div>    
     )
   }
