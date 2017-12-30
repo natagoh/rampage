@@ -4,7 +4,10 @@ import './App.css';
 // loading json book data
 import json from './metadata.json'
 import {ReactHeight} from 'react-height';
- 
+
+// flicking thing
+import Flickity from 'react-flickity-component/src/index'
+
 /* ----------
  * | Props: |
  * ----------
@@ -25,7 +28,7 @@ class Bookshelf extends Component {
     this.state = { 
       shelf_width: 0,
       shelf_space: 10, // space between books
-      book_width: 150,
+      book_width: 200,
       shelf_size: 0, // shelf_size = num books that can fit on a shelf
       shelf_arrays: [] // shelf arrays, array of books to be displayed on a shelf
     };
@@ -114,7 +117,7 @@ class Shelf extends Component {
     super(props);
     this.state = { 
       // jank fix put default value until I figure out whats happening LOL
-      heights: [250], // array of book heights on the shelf
+      heights: [325], // array of book heights on the shelf
       shelf_height: 0, // height of the shelf
       shelf_width: 0, // how wide the shelf is
       size: 0 // number of books that can fit on the shelf
@@ -131,6 +134,14 @@ class Shelf extends Component {
       shelf_width: this.props.shelfWidth
     })
     this.findTallestBook();
+  }
+
+  componentWillUpdate() {
+    let heights = this.state.heights;
+    heights.sort((a, b) => (a - b)*-1);
+    if (heights[0] > this.state.shelf_height) {
+      this.setState({ shelf_height: heights[0] });
+    }
   }
 
   // update shel size state
@@ -233,16 +244,21 @@ class Book extends Component {
   }
 
   render() {
-    var totalBookLength = (this.props.space + this.props.bookWidth)*this.state.shelf_size;
-    var offset = (this.state.shelf_width - totalBookLength) / 2;
-    var bookStyle = {
+    let totalBookLength = (this.props.space + this.props.bookWidth)*this.state.shelf_size;
+    let offset = (this.state.shelf_width - totalBookLength) / 2;
+
+    let bookStyle = {
       left: (this.props.space + this.props.bookWidth)*this.props.pos + offset,
       bottom: 0
+    }
+
+    let imgStyle = {
+      width: this.props.bookWidth+'px'
     }
     return (
       <div className="book" style={bookStyle}>
         <ReactHeight onHeightReady={val => this.setState({ height: val }, this.props.addHeight(val, this.props.pos))}>
-          <img src={this.props.book.img} alt="cover img"></img>
+          <img src={this.props.book.img} style={imgStyle} alt="cover img"></img>
         </ReactHeight>
       </div>
     )

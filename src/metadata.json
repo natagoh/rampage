@@ -6,6 +6,12 @@
 		"review": "FAV BOOK"
 	},
 	{
+		"title" : "Wise Man's Fear",
+		"author": "Patrick Rothfuss",
+		"img": "/covers/wisemansfear.jpg",
+		"review": "FAV BOOK"
+	},
+	{
 		"title" : "The Lies of Locke Lamora",
 		"author": "Scott Lynch",
 		"img": "/covers/lies.jpg",
@@ -24,51 +30,81 @@
 		"review": "FAV BOOK"
 	},
 	{
-		"title" : "The Name of The Wind",
-		"author": "Patrick Rothfuss",
-		"img": "/covers/nameofthewind.jpg",
+		"title" : "Blood Song",
+		"author": "Anthony Ryan",
+		"img": "/covers/bloodsong.jpg",
 		"review": "FAV BOOK"
 	},
 	{
-		"title" : "The Lies of Locke Lamora",
-		"author": "Scott Lynch",
-		"img": "/covers/lies.jpg",
+		"title" : "City of Stairs",
+		"author": "Robert Jackson Bennett",
+		"img": "/covers/cityofstairs.jpg",
 		"review": "FAV BOOK"
 	},
 	{
-		"title" : "The Name of The Wind",
-		"author": "Patrick Rothfuss",
-		"img": "/covers/nameofthewind.jpg",
+		"title" : "City of Blades",
+		"author": "Robert Jackson Bennett",
+		"img": "/covers/cityofblades.jpg",
 		"review": "FAV BOOK"
 	},
 	{
-		"title" : "The Lies of Locke Lamora",
-		"author": "Scott Lynch",
-		"img": "/covers/lies.jpg",
+		"title" : "City of Miracles",
+		"author": "Robert Jackson Bennett",
+		"img": "/covers/cityofmiracles.jpg",
 		"review": "FAV BOOK"
 	},
 	{
-		"title" : "The Name of The Wind",
-		"author": "Patrick Rothfuss",
-		"img": "/covers/nameofthewind.jpg",
+		"title" : "Red Rising",
+		"author": "Pierce Brown",
+		"img": "/covers/redrising.jpg",
 		"review": "FAV BOOK"
 	},
 	{
-		"title" : "The Lies of Locke Lamora",
-		"author": "Scott Lynch",
-		"img": "/covers/lies.jpg",
+		"title" : "Golden Son",
+		"author": "Pierce Brown",
+		"img": "/covers/goldenson.jpg",
 		"review": "FAV BOOK"
 	},
 	{
-		"title" : "The Name of The Wind",
-		"author": "Patrick Rothfuss",
-		"img": "/covers/nameofthewind.jpg",
+		"title" : "Morningstar",
+		"author": "Pierce Brown",
+		"img": "/covers/morningstar.jpg",
 		"review": "FAV BOOK"
 	},
 	{
-		"title" : "The Lies of Locke Lamora",
-		"author": "Scott Lynch",
-		"img": "/covers/lies.jpg",
+		"title" : "Traitor's Blade",
+		"author": "Sebastian DeCastell",
+		"img": "/covers/traitorsblade.jpg",
+		"review": "FAV BOOK"
+	},
+	{
+		"title" : "Knight's Shadow",
+		"author": "Sebastian DeCastell",
+		"img": "/covers/knightsshadow.jpg",
+		"review": "FAV BOOK"
+	},
+	{
+		"title" : "Tyrant's Throne",
+		"author": "Sebastian DeCastell",
+		"img": "/covers/tyrantsthrone.jpg",
+		"review": "FAV BOOK"
+	},
+	{
+		"title" : "Mistborn",
+		"author": "Brandon Sanderson",
+		"img": "/covers/mistborn1.jpg",
+		"review": "FAV BOOK"
+	},
+	{
+		"title" : "Mistborn",
+		"author": "Brandon Sanderson",
+		"img": "/covers/mistborn2.jpg",
+		"review": "FAV BOOK"
+	},
+	{
+		"title" : "Mistborn",
+		"author": "Brandon Sanderson",
+		"img": "/covers/mistborn3.jpg",
 		"review": "FAV BOOK"
 	}
 ]

@@ -3,7 +3,9 @@ import './App.css';
 
 // bookshelf
 import Bookshelf from './Bookshelf.jsx'
- 
+
+
+
 // keeps track of navbar height
 class SmartNav extends Component {
   constructor(props) {
