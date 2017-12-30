@@ -155,24 +155,6 @@ class Shelf extends Component {
     const height = document.getElementById(this.props.id).clientHeight;
   }
 
-  componentDidUpdate() {
-    if (this.state.size !== this.props.shelfSize) {
-      this.setState({ size: this.props.shelfSize });
-
-      // resize heights array
-      let temp = this.state.heights;
-      // this.setState({ size: this.props.bookData.length })
-      if (temp.length > this.props.bookData.length) {
-        temp = temp.slice(0, this.props.bookData.length);
-      }
-
-      this.setState({ heights: temp }, this.findTallestBook);
-    }
-    if (this.state.shelf_width !== this.props.shelfWidth) {
-      this.setState({ shelf_width: this.props.shelfWidth });
-    }  
-  }
-
   componentWillUnmount() {
     this.setState({ heights: [] }); // reset height
   }
