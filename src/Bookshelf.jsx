@@ -5,24 +5,6 @@ import './App.css';
 import json from './metadata.json'
 import {ReactHeight} from 'react-height';
 
-// flicking thing
-import Flickity from 'react-flickity-component/src/index'
-import HorizontalScroll from 'react-scroll-horizontal'
-
-class ScrollingHorizontally extends Component {
-  render() {
-    const child = { width: `300em`, height: `100%`}
-    return (
-      <body>
-        <HorizontalScroll>
-          <div style={child} />
-        </HorizontalScroll>
-      </body>
- 
-    )
-  }
-}
-
 /* ----------
  * | Props: |
  * ----------
@@ -47,15 +29,22 @@ class Bookshelf extends Component {
       shelf_size: 0, // shelf_size = num books that can fit on a shelf
       shelf_arrays: [], // shelf arrays, array of books to be displayed on a shelf
       shelf_groups: [], // array of shelves to be displayed in groups of 2
-      num_shelves: 2 // max number of shelves on one page
+      num_shelves: 2, // max number of shelves on one page
+      shelf_index: 0 // current shelf being viewed
     };
 
     this.calculateShelf = this.calculateShelf.bind(this);
     this.books2Shelves = this.books2Shelves.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
   }
 
   componentWillMount() {
     this.setState({ shelf_width: this.props.width });
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
   }
 
   componentDidMount() {
@@ -78,15 +67,24 @@ class Bookshelf extends Component {
     this.calculateShelf();
     this.books2Shelves();
   }
+  
+  handleScroll() {
+    let curr = this.state.shelf_index;
+    this.setState({ shelf_index: curr+1 })
+  }
 
   // determining how many books can fit in a shelf
   calculateShelf() {
+    var OFFSET_PADDING = 200;
     var space = this.state.shelf_space;
     var bookWidth = this.state.book_width;
 
     var temp = space;
     var numBooks = 0;
-    while (temp + bookWidth + space <= this.props.width) {
+    if (this.state.shelf_width <= 800) {
+      OFFSET_PADDING = 0;
+    }
+    while (temp + bookWidth + space + OFFSET_PADDING <= this.props.width) {
       temp += bookWidth + space;
       numBooks++;
     }
@@ -146,6 +144,17 @@ class Bookshelf extends Component {
     const flickityOptions = {
       initialIndex: 2
     }
+
+    // carousel settings
+    var settings = {
+      dots: true,
+      infinite: true,
+      speed: 500,
+      slidesToShow: 1,
+      slidesToScroll: 1
+    };
+
+    // return
     return (
       <div id='bookshelf'>
         {shelfGroups[0]}
