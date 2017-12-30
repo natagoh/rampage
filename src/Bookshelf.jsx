@@ -7,6 +7,21 @@ import {ReactHeight} from 'react-height';
 
 // flicking thing
 import Flickity from 'react-flickity-component/src/index'
+import HorizontalScroll from 'react-scroll-horizontal'
+
+class ScrollingHorizontally extends Component {
+  render() {
+    const child = { width: `300em`, height: `100%`}
+    return (
+      <body>
+        <HorizontalScroll>
+          <div style={child} />
+        </HorizontalScroll>
+      </body>
+ 
+    )
+  }
+}
 
 /* ----------
  * | Props: |
@@ -30,7 +45,9 @@ class Bookshelf extends Component {
       shelf_space: 10, // space between books
       book_width: 200,
       shelf_size: 0, // shelf_size = num books that can fit on a shelf
-      shelf_arrays: [] // shelf arrays, array of books to be displayed on a shelf
+      shelf_arrays: [], // shelf arrays, array of books to be displayed on a shelf
+      shelf_groups: [], // array of shelves to be displayed in groups of 2
+      num_shelves: 2 // max number of shelves on one page
     };
 
     this.calculateShelf = this.calculateShelf.bind(this);
@@ -90,6 +107,23 @@ class Bookshelf extends Component {
     
     this.setState({ shelf_arrays: shelves});
   }
+/*
+  groupShelves() {
+    // make shelves
+    let shelfArrs = this.state.shelf_arrays;
+    let shelves = []
+    let shelfGroups = [];
+    let id = 'shelf-';
+    for (var j = 0; j < shelfArrs.length; j++)
+    {  
+      if ((j-1) % this.state.num_shelves === 0) {
+        shelfGroups.push(shelves);
+        shelves = [];
+      }
+    }
+    this.setState({ shelf_groups: shelfGroups });
+  }
+*/
 
   // determine how many shelevs we need and how many books on each shelf
   render() {
@@ -98,13 +132,23 @@ class Bookshelf extends Component {
     var shelves = []
     var id = 'shelf-';
     for (var j = 0; j < shelfArrs.length; j++)
-    {
-        shelves.push(<Shelf key={j} id={id+j} shelfPos={j} shelfWidth={this.state.shelf_width} shelfSize={this.state.shelf_size} bookData={shelfArrs[j]} bookWidth={this.state.book_width} space={this.state.shelf_space}/>);
+    {  
+      shelves.push(<Shelf key={j} id={id+j} shelfPos={j} shelfWidth={this.state.shelf_width} shelfSize={this.state.shelf_size} bookData={shelfArrs[j]} bookWidth={this.state.book_width} space={this.state.shelf_space}/>);
     }
 
+    var shelfGroups = [];
+    for (var j = 0; j < json.length; j++) {
+      if (j % this.state.num_shelves === 0) {
+        shelfGroups.push(shelves.slice(j, j+this.state.num_shelves));
+      } 
+    }
+
+    const flickityOptions = {
+      initialIndex: 2
+    }
     return (
       <div id='bookshelf'>
-        {shelves}
+        {shelfGroups[0]}
       </div>    
     )
   }
