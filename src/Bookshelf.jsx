@@ -19,6 +19,7 @@ import {ReactHeight} from 'react-height';
  * shelf_space:
  * shelf_width:
  */
+ // lol bookshelf is also a carousel
 class Bookshelf extends Component {
   constructor(props) {
     super(props);
@@ -35,6 +36,7 @@ class Bookshelf extends Component {
 
     this.calculateShelf = this.calculateShelf.bind(this);
     this.books2Shelves = this.books2Shelves.bind(this);
+    this.groupShelves = this.groupShelves.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
   }
 
@@ -68,9 +70,16 @@ class Bookshelf extends Component {
     this.books2Shelves();
   }
   
-  handleScroll() {
+  handleScroll(event) {
     let curr = this.state.shelf_index;
-    this.setState({ shelf_index: curr+1 })
+    let dir = event.deltaY;
+    if (dir > 0) {
+      curr = (curr + 1) % this.state.shelf_size;
+    } 
+    else if (dir < 0) {
+      curr = (curr - 1 + this.state.shelf_size) % this.state.shelf_size;
+    }
+    this.setState({ shelf_index: curr })
   }
 
   // determining how many books can fit in a shelf
@@ -102,26 +111,28 @@ class Bookshelf extends Component {
         shelves.push(json.slice(j, j+this.state.shelf_size));
       } 
     }
-    
     this.setState({ shelf_arrays: shelves});
   }
-/*
+
   groupShelves() {
     // make shelves
-    let shelfArrs = this.state.shelf_arrays;
-    let shelves = []
-    let shelfGroups = [];
-    let id = 'shelf-';
+    var shelfArrs = this.state.shelf_arrays;
+    var shelves = []
+    var id = 'shelf-';
     for (var j = 0; j < shelfArrs.length; j++)
     {  
-      if ((j-1) % this.state.num_shelves === 0) {
-        shelfGroups.push(shelves);
-        shelves = [];
-      }
+      shelves.push(<Shelf key={j} id={id+j} shelfPos={j} shelfWidth={this.state.shelf_width} shelfSize={this.state.shelf_size} bookData={shelfArrs[j]} bookWidth={this.state.book_width} space={this.state.shelf_space}/>);
     }
+
+    var shelfGroups = [];
+    for (var j = 0; j < json.length; j++) {
+      if (j % this.state.num_shelves === 0) {
+        shelfGroups.push(shelves.slice(j, j+this.state.num_shelves));
+      } 
+    }
+
     this.setState({ shelf_groups: shelfGroups });
   }
-*/
 
   // determine how many shelevs we need and how many books on each shelf
   render() {
@@ -141,20 +152,17 @@ class Bookshelf extends Component {
       } 
     }
 
-    const flickityOptions = {
-      initialIndex: 2
-    }
-
     var curr = this.state.shelf_index % this.state.shelf_size;
     console.log("CURRENT INDEX: ", curr)
     // return
     return (
       <div id='bookshelf' onWheel = {this.handleScroll}>
-        {shelfGroups[this.state.shelf_index % this.state.shelf_size]}
+        {shelfGroups[this.state.shelf_index]}
       </div>    
     )
   }
 }
+
 
 // a bookshelf consists of shelves
 // which consists of books
